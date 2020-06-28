@@ -29,12 +29,15 @@ const Import: React.FC = () => {
       return;
     }
 
-    data.append('file', uploadedFiles[0].file);
+    const file = uploadedFiles[0];
+
+    data.append('file', file.file, file.name);
 
     try {
       await api.post('/transactions/import', data);
+      history.push('/');
     } catch (err) {
-      console.log(err.response.error);
+      console.log(err);
     }
   }
 
@@ -42,7 +45,7 @@ const Import: React.FC = () => {
     const newFiles: FileProps[] = files.map(file => ({
       file,
       name: file.name,
-      readableSize: `${Math.round(file.size / 1000)} KB`,
+      readableSize: filesize(file.size),
     }));
 
     console.log(newFiles);
